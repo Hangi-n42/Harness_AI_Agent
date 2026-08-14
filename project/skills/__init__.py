@@ -11,7 +11,9 @@ from skills.base import KnowledgeSkill, Skill, SkillResult
 from skills.campus import CampusSkill
 from skills.fallback import FallbackSkill
 from skills.library import LibrarySkill
+from skills.summary import SummarySkill
 from skills.translation import TranslationSkill
+from skills.workflow_skill import WorkflowSkill
 
 __all__ = [
     "Skill",
@@ -20,10 +22,14 @@ __all__ = [
     "CampusSkill",
     "LibrarySkill",
     "TranslationSkill",
+    "SummarySkill",
+    "WorkflowSkill",
     "FallbackSkill",
     "build_skills",
 ]
 
 
 def build_skills() -> list[Skill]:
-    return [TranslationSkill(), LibrarySkill(), CampusSkill(), FallbackSkill()]
+    # WorkflowSkill first: it only matches compound "summarize + translate"
+    # requests, which is more specific than a plain TranslationSkill match.
+    return [WorkflowSkill(), TranslationSkill(), LibrarySkill(), CampusSkill(), FallbackSkill()]
